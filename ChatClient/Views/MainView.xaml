@@ -1,0 +1,202 @@
+﻿<Window x:Class="ChatClient.Views.MainView"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChatClient.Views"
+        mc:Ignorable="d"
+        Title="ChatView" 
+        Height="821.5" 
+        Width="1281"
+        WindowStartupLocation="CenterScreen"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignDarkBackground}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        ResizeMode="NoResize">
+    
+    <StackPanel
+        Orientation="Horizontal"
+        Margin="0,0,0,2">
+        <StackPanel
+            Width="250"
+            Background="#FF4F4C4C">
+            <Expander 
+                FlowDirection="RightToLeft"
+                Grid.Column="0" Grid.Row="1" 
+                Background="#FF3A3838"
+                IsExpanded="True"
+                Margin="0,0,0,658">
+                <Expander.Header>
+                    <DockPanel 
+                        FlowDirection="LeftToRight"
+                        Height="30">
+                        <StackPanel 
+                            DockPanel.Dock="Right" 
+                            Orientation="Horizontal">
+                            <TextBlock 
+                                Text="Menu" 
+                                Width="74" 
+                                FontSize="20" 
+                                TextAlignment="Center" 
+                                VerticalAlignment="Center" 
+                                Margin="0,2,0,1"/>
+                        </StackPanel>
+                    </DockPanel>
+                </Expander.Header>
+                <StackPanel
+                    VerticalAlignment="Stretch"
+                    Orientation="Vertical">             
+                        <Expander 
+                            Margin="0,20" 
+                            Background="#FF4F4C4C" 
+                            IsExpanded="True">
+                            <Expander.Header>
+                                <DockPanel 
+                                    FlowDirection="LeftToRight">
+                                    <TextBlock 
+                                        Text="Users" 
+                                        FontSize="20" 
+                                        Foreground="AliceBlue" 
+                                        TextAlignment="Center" 
+                                        VerticalAlignment="Center" 
+                                        HorizontalAlignment="Left"
+                                        Width="59"/>
+                                </DockPanel>
+                            </Expander.Header>
+                            <ListView 
+                                ItemsSource="{Binding Users}"
+                                FlowDirection="LeftToRight">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock
+                                            Text="{Binding Name}"/>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </Expander>
+                    <Expander
+                            Margin="0,20" 
+                            Background="#FF4F4C4C" 
+                            IsExpanded="False">
+                            <Expander.Header>
+                                <DockPanel
+                                    FlowDirection="LeftToRight">
+                                    <TextBlock 
+                                        Text="Options"
+                                        FontSize="20" 
+                                        Foreground="AliceBlue" 
+                                        TextAlignment="Center" 
+                                        VerticalAlignment="Center" 
+                                        HorizontalAlignment="Left" 
+                                        Width="80"/>
+                                </DockPanel>
+                            </Expander.Header>
+                            <DockPanel 
+                                FlowDirection="LeftToRight">
+                                <Button 
+                                    Foreground="Red"
+                                    DockPanel.Dock="Left"
+                                    Background="#FF433F3F"
+                                    BorderBrush="#FF2C2B2B"
+                                    Margin="0,10,120,10"
+                                    Command="{Binding Disconnect}">
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        Width="121"
+                                        Height="28">
+                                        <TextBlock 
+                                            Text="Log Out" 
+                                            Foreground="Red"
+                                            TextAlignment="Center"
+                                            Height="18"
+                                            Margin="0,5" 
+                                            Width="55"/>
+                                    </StackPanel>
+                                </Button>
+                                <ProgressBar
+                                    DockPanel.Dock="Left"
+                                    Value="0"
+                                    IsIndeterminate="True" 
+                                    Foreground="Silver" 
+                                    Height="24"
+                                    Width="26"
+                                    Margin="-120,-5,0,0">
+                                    <ProgressBar.Style>
+                                        <Style 
+                                            TargetType="ProgressBar">
+                                            <Setter 
+                                                Property="Visibility" 
+                                                Value="Visible"></Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger 
+                                                    Binding="{Binding IsDisconnecting}"
+                                                    Value="True">
+                                                    <Setter 
+                                                        Property="Visibility"
+                                                        Value="Visible"/>
+                                                </DataTrigger>
+                                                <DataTrigger 
+                                                    Binding="{Binding IsDisconnecting}"
+                                                    Value="False">
+                                                    <Setter 
+                                                        Property="Visibility"
+                                                        Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ProgressBar.Style>
+                                </ProgressBar>
+                            </DockPanel>
+                        </Expander>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
+        <StackPanel 
+            Width="1030">
+        <StackPanel>
+            <TextBlock 
+                FontSize="16"
+                Width="116" 
+                Text="Message History" 
+                VerticalAlignment="Center"/>
+        </StackPanel>
+        <ListView
+            Background="#FF3A3838" 
+            ItemsSource="{Binding Messages}" Height="736">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel VerticalAlignment="Bottom"/>
+                </ItemsPanelTemplate>   
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0}: {1}">
+                                <Binding Path="User.Name" />
+                                <Binding Path="Message" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+            <TextBox
+                BorderBrush="Black"
+                FontSize="15" 
+                Text="{Binding CurrentMessage, UpdateSourceTrigger=PropertyChanged}"
+                Height="37"
+                VerticalContentAlignment="Center"
+                CaretBrush="White">
+                <TextBox.InputBindings>
+                    <KeyBinding 
+                        Command="{Binding Send}"
+                        Key="Enter" />
+                </TextBox.InputBindings>
+            </TextBox>
+        </StackPanel>
+    </StackPanel>
+</Window>
